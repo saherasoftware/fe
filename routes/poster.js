@@ -46,7 +46,7 @@ router.post('/', asyncHandler(async (req, res) => {
             const { posterName , productId } = req.body;
             let imageUrl = 'no_url';
             if (req.file) {
-                imageUrl = `https://fe.saherasoftware.com/image/poster/${req.file.filename}`;
+                imageUrl = `https://server-fe.saherasoftware.com/image/poster/${req.file.filename}`;
             }
 
             if (!posterName) {
@@ -95,7 +95,7 @@ router.put('/:id', asyncHandler(async (req, res) => {
 
 
             if (req.file) {
-                image = `https://fe.saherasoftware.com/image/poster/${req.file.filename}`;
+                image = `https://server-fe.saherasoftware.com/image/poster/${req.file.filename}`;
             }
 
             if (!posterName || !image) {
