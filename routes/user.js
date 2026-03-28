@@ -3,6 +3,25 @@ const asyncHandler = require('express-async-handler');
 const router = express.Router();
 const User = require('../model/user');
 
+// Create default admin (one-time setup, call POST /users/create-admin)
+router.post('/create-admin', asyncHandler(async (req, res) => {
+    try {
+        const existingAdmin = await User.findOne({ role: 'admin' });
+        if (existingAdmin) {
+            return res.json({ success: false, message: "Admin user already exists." });
+        }
+        const admin = new User({
+            name: req.body.name || 'admin',
+            password: req.body.password || 'admin123',
+            role: 'admin'
+        });
+        await admin.save();
+        res.json({ success: true, message: "Admin user created successfully.", data: null });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+}));
+
 // Get all users
 router.get('/', asyncHandler(async (req, res) => {
     try {
@@ -21,7 +40,6 @@ router.post('/login', async (req, res) => {
         // Check if the user exists
         const user = await User.findOne({ name });
 
-
         if (!user) {
             return res.status(401).json({ success: false, message: "Invalid name or password." });
         }
@@ -31,12 +49,36 @@ router.post('/login', async (req, res) => {
         }
 
         // Authentication successful
-        res.status(200).json({ success: true, message: "Login successful.",data: user });
+        res.status(200).json({ success: true, message: "Login successful.", data: user });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 });
 
+// Admin login - only allows admin role users
+router.post('/admin-login', async (req, res) => {
+    const { name, password } = req.body;
+
+    try {
+        const user = await User.findOne({ name });
+
+        if (!user) {
+            return res.status(401).json({ success: false, message: "Invalid name or password." });
+        }
+
+        if (user.password !== password) {
+            return res.status(401).json({ success: false, message: "Invalid name or password." });
+        }
+
+        if (user.role !== 'admin') {
+            return res.status(403).json({ success: false, message: "Access denied. Admin privileges required." });
+        }
+
+        res.status(200).json({ success: true, message: "Admin login successful.", data: user });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
 
 // Get a user by ID
 router.get('/:id', asyncHandler(async (req, res) => {
@@ -72,14 +114,17 @@ router.post('/register', asyncHandler(async (req, res) => {
 router.put('/:id', asyncHandler(async (req, res) => {
     try {
         const userID = req.params.id;
-        const { name, password } = req.body;
+        const { name, password, role } = req.body;
         if (!name || !password) {
-            return res.status(400).json({ success: false, message: "Name,  and password are required." });
+            return res.status(400).json({ success: false, message: "Name, and password are required." });
         }
+
+        const updateData = { name, password };
+        if (role) updateData.role = role;
 
         const updatedUser = await User.findByIdAndUpdate(
             userID,
-            { name, password },
+            updateData,
             { new: true }
         );
 
