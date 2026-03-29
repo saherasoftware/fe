@@ -5,6 +5,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  email: {
+    type: String,
+    default: null
+  },
   password: {
     type: String,
     required: true
@@ -14,15 +18,19 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user'
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  isEmailVerified: {
+    type: Boolean,
+    default: false
   },
-  updatedAt: {
+  emailVerificationToken: {
+    type: String,
+    default: null
+  },
+  emailVerificationExpires: {
     type: Date,
-    default: Date.now
-  }
-});
+    default: null
+  },
+}, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
 

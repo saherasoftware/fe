@@ -88,8 +88,9 @@ router.put('/:id', asyncHandler(async (req, res) => {
                 console.log(`Update category: ${err.message}`);
                 return res.json({ success: false, message: err.message });
             } else if (err) {
-                console.log(`Update category: ${err.message}`);
-                return res.json({ success: false, message: err.message });
+                const errMsg = err.message || String(err);
+                console.log(`Update category: ${errMsg}`);
+                return res.json({ success: false, message: errMsg });
             }
 
             const { name } = req.body;

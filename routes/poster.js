@@ -86,8 +86,9 @@ router.put('/:id', asyncHandler(async (req, res) => {
                 console.log(`Update poster: ${err.message}`);
                 return res.json({ success: false, message: err.message });
             } else if (err) {
-                console.log(`Update poster: ${err.message}`);
-                return res.json({ success: false, message: err.message });
+                const errMsg = err.message || String(err);
+                console.log(`Update poster: ${errMsg}`);
+                return res.json({ success: false, message: errMsg });
             }
 
             const { posterName , productId } = req.body;

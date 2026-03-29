@@ -117,8 +117,9 @@ router.put('/:id', asyncHandler(async (req, res) => {
             { name: 'image5', maxCount: 1 }
         ])(req, res, async function (err) {
             if (err) {
-                console.log(`Update product: ${err}`);
-                return res.status(500).json({ success: false, message: err.message });
+                const errMsg = err.message || String(err);
+                console.log(`Update product: ${errMsg}`);
+                return res.status(500).json({ success: false, message: errMsg });
             }
 
             const { name, description, quantity, price, offerPrice, proCategoryId, proSubCategoryId, proBrandId, proVariantTypeId, proVariantId } = req.body;

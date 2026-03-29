@@ -26,7 +26,7 @@ router.post('/stripe', asyncHandler(async (req, res) => {
     );
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount,
+      amount: Math.round(amount),
       currency: currency,
       customer: customer.id,
       description: description,
