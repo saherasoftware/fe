@@ -7,13 +7,14 @@ const storageCategory = multer.diskStorage({
   },
   filename: function(req, file, cb) {
     // Check file type based on its extension
-    const filetypes = /jpeg|jpg|png/;
+    const filetypes = /jpeg|jpg|png|webp/;
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype.split('/')[1]);
 
-    if (extname) {
+    if (extname || mimetype) {
       cb(null, Date.now() + "_" + Math.floor(Math.random() * 1000) + path.extname(file.originalname));
     } else {
-      cb("Error: only .jpeg, .jpg, .png files are allowed!");
+      cb("Error: only .jpeg, .jpg, .png, .webp files are allowed!");
     }
   }
 });
@@ -31,13 +32,14 @@ const storageProduct = multer.diskStorage({
   },
   filename: function(req, file, cb) {
     // Check file type based on its extension
-    const filetypes = /jpeg|jpg|png/;
+    const filetypes = /jpeg|jpg|png|webp/;
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype.split('/')[1]);
 
-    if (extname) {
+    if (extname || mimetype) {
       cb(null, Date.now() + "_" + file.originalname);
     } else {
-      cb("Error: only .jpeg, .jpg, .png files are allowed!");
+      cb("Error: only .jpeg, .jpg, .png, .webp files are allowed!");
     }
   }
 });
@@ -56,13 +58,14 @@ const storagePoster = multer.diskStorage({
   },
   filename: function(req, file, cb) {
     // Check file type based on its extension
-    const filetypes = /jpeg|jpg|png/;
+    const filetypes = /jpeg|jpg|png|webp/;
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype.split('/')[1]);
 
-    if (extname) {
+    if (extname || mimetype) {
       cb(null, Date.now() + "_" + file.originalname);
     } else {
-      cb("Error: only .jpeg, .jpg, .png files are allowed!");
+      cb("Error: only .jpeg, .jpg, .png, .webp files are allowed!");
     }
   }
 });
